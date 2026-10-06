@@ -1,0 +1,32 @@
+{
+  "id": "beginner",
+  "label": "Beginner",
+  "ai": {
+    "thinkDelayMs": 350,
+    "strength": 0.2,
+    "mistakeRate": 0.35
+  },
+  "explainer": {
+    "depth": "brief",
+    "decisionTypes": ["discard", "call", "win"]
+  },
+  "hints": {
+    "allowed": ["tilesAway", "bestPattern", "safeDiscard", "callAdvice"]
+  },
+  "undo": {
+    "mode": "unlimited"
+  },
+  "warnVsDeadHand": true,
+  "lessonSet": {
+    "id": "beginner",
+    "lessons": [
+      "suits",
+      "dragons",
+      "winds",
+      "flowers-jokers",
+      "how-to-win",
+      "your-turn",
+      "when-someone-discards"
+    ]
+  }
+}

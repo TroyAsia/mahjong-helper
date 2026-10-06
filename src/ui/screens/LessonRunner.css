@@ -1,0 +1,141 @@
+.lesson-runner {
+  width: min(42rem, 100%);
+}
+
+.lesson-meta {
+  margin: 0 0 0.65rem;
+  color: #b7c9be;
+  font-size: 0.92rem;
+}
+
+.lesson-progress-bar {
+  height: 0.35rem;
+  margin-bottom: 1.25rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+}
+
+.lesson-progress-bar > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #c4a862, #e2c56b);
+  transition: width 200ms ease;
+}
+
+.lesson-step-title {
+  margin: 0 0 0.75rem;
+  font-family: 'Fraunces', serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #f0e8d6;
+}
+
+.lesson-situation {
+  margin: 0 0 0.85rem;
+  padding: 0.75rem 0.85rem;
+  border-left: 3px solid rgba(226, 197, 107, 0.7);
+  background: rgba(0, 0, 0, 0.18);
+  color: #d0ddd6;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.lesson-tile-focus,
+.lesson-tile-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.lesson-tile-focus {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.lesson-tile-caption {
+  font-size: 0.85rem;
+  color: #9eb3a8;
+}
+
+.lesson-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.lesson-choice {
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  border-radius: 0.2rem;
+  border: 1px solid rgba(196, 168, 98, 0.35);
+  background: rgba(244, 236, 214, 0.08);
+  color: #eef3ef;
+  cursor: pointer;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1rem;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.lesson-choice:hover:not(:disabled),
+.lesson-choice:focus-visible:not(:disabled) {
+  border-color: #e2c56b;
+  outline: none;
+}
+
+.lesson-choice.is-selected {
+  border-color: #e2c56b;
+  background: rgba(226, 197, 107, 0.16);
+}
+
+.lesson-choice.is-correct,
+.lesson-choice.is-correct-reveal {
+  border-color: #7dcea0;
+  background: rgba(45, 120, 84, 0.35);
+}
+
+.lesson-choice.is-wrong {
+  border-color: #d9897a;
+  background: rgba(120, 48, 40, 0.35);
+}
+
+.lesson-choice:disabled {
+  cursor: default;
+}
+
+.lesson-feedback {
+  margin-top: 1rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: 0.2rem;
+}
+
+.lesson-feedback p {
+  margin: 0.3rem 0 0;
+  line-height: 1.5;
+}
+
+.lesson-feedback.is-good {
+  background: rgba(45, 120, 84, 0.28);
+  border: 1px solid rgba(125, 206, 160, 0.45);
+}
+
+.lesson-feedback.is-bad {
+  background: rgba(120, 48, 40, 0.28);
+  border: 1px solid rgba(217, 137, 122, 0.45);
+}
+
+.lesson-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.35rem;
+}
+
+.lesson-nav .cta:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}

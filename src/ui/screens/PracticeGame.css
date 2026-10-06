@@ -1,0 +1,174 @@
+.practice {
+  position: relative;
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 1rem 1rem 2rem;
+}
+
+.practice-back {
+  display: inline-block;
+  margin-bottom: 0.65rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #d7c389;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.practice-back:hover,
+.practice-back:focus-visible {
+  color: #f2e6c0;
+}
+
+.practice-header h1 {
+  margin: 0 0 0.35rem;
+  font-family: 'Fraunces', 'Palatino Linotype', Palatino, serif;
+  font-size: 1.75rem;
+  color: #f2efe6;
+}
+
+.practice-status {
+  margin: 0 0 0.35rem;
+  color: #c8d9d0;
+  font-size: 0.95rem;
+}
+
+.practice-meter {
+  margin: 0 0 0.25rem;
+  color: #e2c56b;
+  font-size: 0.95rem;
+}
+
+.practice-notice {
+  margin: 0 0 0.75rem;
+  color: #8aa89a;
+  font-size: 0.8rem;
+}
+
+.practice-hint {
+  margin: 0.5rem 0 0;
+  color: #d8e8b0;
+  font-size: 0.95rem;
+}
+
+.practice-explain {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.8rem;
+  background: rgba(0, 0, 0, 0.22);
+  border-left: 3px solid #e2c56b;
+  color: #e8f2ee;
+}
+
+.practice-explain p {
+  margin: 0.25rem 0 0;
+  color: #c8d9d0;
+}
+
+.practice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  font: inherit;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid #2a6b5a;
+  border-radius: 0.3rem;
+  background: #143f36;
+  color: #e8f2ee;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled),
+.btn:focus-visible {
+  outline: 2px solid #7dcea0;
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #1f6b55;
+  border-color: #3d9a7a;
+}
+
+.rack {
+  margin-bottom: 1rem;
+}
+
+.rack-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #a8c4b8;
+}
+
+.rack-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  min-height: 3.6rem;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 0.4rem;
+}
+
+.opponent-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  color: #b7cfc4;
+  font-size: 0.9rem;
+}
+
+.discards {
+  margin-top: 0.5rem;
+}
+
+.discard-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin-bottom: 0.4rem;
+}
+
+.discard-seat {
+  flex: 0 0 3.5rem;
+  text-transform: capitalize;
+  color: #a8c4b8;
+  font-size: 0.85rem;
+  padding-top: 0.6rem;
+}
+
+.discard-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.discard-empty {
+  color: #6a857a;
+  padding: 0.6rem 0;
+}
+
+@media (max-width: 375px) {
+  .practice {
+    padding: 0.6rem;
+  }
+
+  .tile {
+    width: 2.1rem;
+    height: 2.9rem;
+  }
+}

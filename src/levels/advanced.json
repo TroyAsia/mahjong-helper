@@ -1,0 +1,37 @@
+{
+  "id": "advanced",
+  "label": "Advanced",
+  "ai": {
+    "thinkDelayMs": 80,
+    "strength": 0.9,
+    "mistakeRate": 0.05
+  },
+  "explainer": {
+    "depth": "analytical",
+    "decisionTypes": ["discard", "call", "charleston", "win"]
+  },
+  "hints": {
+    "allowed": [
+      "tilesAway",
+      "bestPattern",
+      "safeDiscard",
+      "callAdvice",
+      "charlestonAdvice",
+      "showOdds"
+    ]
+  },
+  "undo": {
+    "mode": "limited",
+    "limit": 3
+  },
+  "warnVsDeadHand": false,
+  "lessonSet": {
+    "id": "advanced",
+    "lessons": [
+      "reading-discards",
+      "hand-equity",
+      "wall-awareness",
+      "decision-comparison"
+    ]
+  }
+}

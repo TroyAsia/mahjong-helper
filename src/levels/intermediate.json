@@ -1,0 +1,37 @@
+{
+  "id": "intermediate",
+  "label": "Intermediate",
+  "ai": {
+    "thinkDelayMs": 200,
+    "strength": 0.55,
+    "mistakeRate": 0.15
+  },
+  "explainer": {
+    "depth": "detailed",
+    "decisionTypes": ["discard", "call", "charleston", "win"]
+  },
+  "hints": {
+    "allowed": [
+      "tilesAway",
+      "bestPattern",
+      "safeDiscard",
+      "callAdvice",
+      "charlestonAdvice"
+    ]
+  },
+  "undo": {
+    "mode": "limited",
+    "limit": 10
+  },
+  "warnVsDeadHand": false,
+  "lessonSet": {
+    "id": "intermediate",
+    "lessons": [
+      "which-to-discard",
+      "defending",
+      "scoring-basics",
+      "charleston-strategy",
+      "call-judgment"
+    ]
+  }
+}

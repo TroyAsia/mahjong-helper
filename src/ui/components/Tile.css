@@ -1,0 +1,50 @@
+.tile {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 3.2rem;
+  margin: 0.15rem;
+  padding: 0.2rem;
+  border: 1px solid #8a7a5c;
+  border-radius: 0.25rem;
+  background: linear-gradient(160deg, #fffef8 0%, #efe6d4 100%);
+  color: #1c1814;
+  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  box-shadow: 0 1px 0 #cbb892;
+  vertical-align: top;
+}
+
+.tile--button {
+  cursor: pointer;
+}
+
+.tile--button:hover:not(:disabled),
+.tile--button:focus-visible {
+  outline: 2px solid #0d5c4d;
+  outline-offset: 2px;
+}
+
+.tile--button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.tile--selected {
+  outline: 2px solid #0d5c4d;
+  outline-offset: 2px;
+  transform: translateY(-4px);
+}
+
+.tile-marker {
+  font-size: 0.7rem;
+  opacity: 0.85;
+}
+
+.tile-label {
+  letter-spacing: 0.02em;
+}
