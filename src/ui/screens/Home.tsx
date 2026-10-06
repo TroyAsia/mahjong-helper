@@ -12,7 +12,7 @@ export function Home({ onPlayVsAi, onLessons }: Props) {
         <p className="brand">Mahjong Helper</p>
         <h1 className="headline">Welcome to Mahjong Helper</h1>
         <p className="lede">
-          It will help you get better at mahjong — from reading tiles to
+          It will help you get better at mahjong, from reading tiles to
           practicing full hands against AI.
         </p>
         <div className="cta-row">

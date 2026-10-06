@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import type { Pattern } from '../../engine/patterns'
 
-/** Original practice patterns — not the official NMJL card. */
+/** Original practice patterns, not the official NMJL card. */
 
 const suitSchema = z.enum(['bam', 'crak', 'dot', 'any'])
 const rankSchema = z.union([
@@ -59,7 +59,7 @@ export type PracticeCard = z.infer<typeof practiceCardSchema>
 
 export const practiceCard: PracticeCard = practiceCardSchema.parse({
   notice:
-    'Practice patterns for learning only — not the official NMJL card.',
+    'Practice patterns for learning only, not the official NMJL card.',
   patterns: [
     {
       id: 'bamboo-ladder',

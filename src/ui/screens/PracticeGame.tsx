@@ -88,7 +88,7 @@ export function PracticeGame({ onBack }: Props) {
     present.phase === 'ended'
       ? present.endReason === 'win'
         ? `Mahjong! Winner: ${present.winner}`
-        : `Game over — draw (empty wall)`
+        : `Game over: draw (empty wall)`
       : `Turn: ${present.currentSeat} · Phase: ${present.phase} · Wall: ${present.wall.length}`
 
   return (
@@ -106,7 +106,7 @@ export function PracticeGame({ onBack }: Props) {
           {bestName ? ` · best: ${bestName}` : ''}
         </p>
         <p className="practice-notice">
-          Practice patterns only — not the official NMJL card.
+          Practice patterns only, not the official NMJL card.
         </p>
         <div className="practice-actions">
           <button type="button" onClick={() => newGame()} className="btn">

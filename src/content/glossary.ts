@@ -90,7 +90,7 @@ export const glossary: readonly GlossaryTerm[] = [
     id: 'pattern',
     term: 'Pattern',
     definition:
-      'A listed winning hand shape. In American mahjong you win by matching a card pattern — not free-form chows.',
+      'A listed winning hand shape. In American mahjong you win by matching a card pattern, not free-form chows.',
   },
   {
     id: 'exposure',

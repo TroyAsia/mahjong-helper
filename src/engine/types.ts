@@ -1,4 +1,4 @@
-/** Core engine types. Plain JSON only — no classes, functions, Map, or Set. */
+/** Core engine types. Plain JSON only: no classes, functions, Map, or Set. */
 
 export type Seat = 'east' | 'south' | 'west' | 'north'
 

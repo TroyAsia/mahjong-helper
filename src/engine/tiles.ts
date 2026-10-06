@@ -104,7 +104,7 @@ export function countByKind(tiles: readonly Tile[]): {
 
 /**
  * Mulberry32: returns [0, 1) and the next 32-bit seed.
- * Pure — same seed always yields the same stream.
+ * Pure: same seed always yields the same stream.
  */
 export function nextRng(seed: number): { value: number; nextSeed: number } {
   let t = (seed + 0x6d2b79f5) >>> 0

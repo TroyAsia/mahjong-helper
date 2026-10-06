@@ -18,7 +18,7 @@ export function DiscardPile({ discards, seats }: Props) {
               <TileView key={tile.id} tile={tile} />
             ))}
             {discards[seat].length === 0 && (
-              <span className="discard-empty">—</span>
+              <span className="discard-empty">none</span>
             )}
           </div>
         </div>

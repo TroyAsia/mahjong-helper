@@ -7,7 +7,7 @@ import { useGameStore } from './gameStore'
 
 export type GameLoopOptions = {
   readonly humanSeat: Seat
-  /** From LevelConfig.ai — drives bot delay and strength. */
+  /** From LevelConfig.ai: drives bot delay and strength. */
   readonly ai: AiConfig
   readonly onUpdate?: () => void
 }

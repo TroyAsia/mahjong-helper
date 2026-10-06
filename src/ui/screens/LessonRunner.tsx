@@ -9,7 +9,13 @@ import {
 } from '../../app/lessonDisplay'
 import type { LevelId } from '../../app/levelTypes'
 import { getLesson, getLessonTrack } from '../../content/lessons/tracks'
-import type { LessonStep } from '../../content/lessons/types'
+import {
+  faceKey,
+  isPlayCorrect,
+  type LessonFace,
+  type LessonStep,
+  type PlayStep,
+} from '../../content/lessons/types'
 import { GlossaryText } from '../components/GlossaryText'
 import { TileView } from '../components/Tile'
 import './LessonRunner.css'
@@ -45,11 +51,16 @@ export function LessonRunner({ level, lessonId, onBack }: Props) {
   const step = lesson.steps[stepIndex]!
   const total = lesson.steps.length
   const isLast = stepIndex >= total - 1
-  const interactive = step.type !== 'teach'
-  const isCorrect =
-    interactive && selectedId !== null
-      ? selectedId === step.correctId
-      : false
+  const isTeach = step.type === 'teach'
+  const isPlay = step.type === 'play'
+  const needsCheckButton = step.type === 'quiz' || step.type === 'identify'
+
+  const isCorrect = (() => {
+    if (selectedId === null || isTeach) return false
+    if (step.type === 'play') return isPlayCorrect(step, selectedId)
+    return selectedId === step.correctId
+  })()
+
   const progressLabel = `Step ${stepIndex + 1} of ${total}`
   const alreadyDone = isLessonComplete(level, lessonId)
 
@@ -64,13 +75,27 @@ export function LessonRunner({ level, lessonId, onBack }: Props) {
     setChecked(false)
   }
 
-  const checkAnswer = () => {
-    if (!interactive || selectedId === null || checked) return
+  const registerResult = (moveId: string, correct: boolean) => {
+    setSelectedId(moveId)
     setChecked(true)
     setScore((s) => ({
-      correct: s.correct + (selectedId === step.correctId ? 1 : 0),
+      correct: s.correct + (correct ? 1 : 0),
       asked: s.asked + 1,
     }))
+  }
+
+  const checkAnswer = () => {
+    if (!needsCheckButton || selectedId === null || checked) return
+    const correct =
+      step.type === 'quiz' || step.type === 'identify'
+        ? selectedId === step.correctId
+        : false
+    registerResult(selectedId, correct)
+  }
+
+  const onPlayMove = (moveId: string) => {
+    if (!isPlay || checked) return
+    registerResult(moveId, isPlayCorrect(step, moveId))
   }
 
   return (
@@ -99,21 +124,55 @@ export function LessonRunner({ level, lessonId, onBack }: Props) {
           <span style={{ width: `${((stepIndex + 1) / total) * 100}%` }} />
         </div>
 
-        <StepBody
-          step={step}
-          selectedId={selectedId}
-          checked={checked}
-          onSelect={(id) => {
-            if (!checked) setSelectedId(id)
-          }}
-        />
+        {isTeach && <TeachBody step={step} />}
+        {step.type === 'quiz' && (
+          <ChoiceBody
+            prompt={step.prompt}
+            choices={step.choices}
+            selectedId={selectedId}
+            checked={checked}
+            correctId={step.correctId}
+            onSelect={(id) => {
+              if (!checked) setSelectedId(id)
+            }}
+          />
+        )}
+        {step.type === 'identify' && (
+          <ChoiceBody
+            prompt={step.prompt}
+            choices={step.choices}
+            selectedId={selectedId}
+            checked={checked}
+            correctId={step.correctId}
+            onSelect={(id) => {
+              if (!checked) setSelectedId(id)
+            }}
+            focusTile={step.tile}
+          />
+        )}
+        {isPlay && (
+          <PlayBody
+            step={step}
+            selectedId={selectedId}
+            checked={checked}
+            onMove={onPlayMove}
+          />
+        )}
 
-        {checked && interactive && (
+        {checked && step.type !== 'teach' && (
           <div
             className={`lesson-feedback ${isCorrect ? 'is-good' : 'is-bad'}`}
             role="status"
           >
-            <strong>{isCorrect ? 'Correct' : 'Not quite'}</strong>
+            <strong>
+              {step.type === 'play'
+                ? isCorrect
+                  ? 'Correct move'
+                  : 'Not the best move'
+                : isCorrect
+                  ? 'Correct'
+                  : 'Not quite'}
+            </strong>
             <p>
               <GlossaryText text={step.explanation} />
             </p>
@@ -121,7 +180,7 @@ export function LessonRunner({ level, lessonId, onBack }: Props) {
         )}
 
         <div className="lesson-nav">
-          {interactive && !checked && (
+          {needsCheckButton && !checked && (
             <button
               type="button"
               className="cta cta--primary"
@@ -131,7 +190,7 @@ export function LessonRunner({ level, lessonId, onBack }: Props) {
               Check answer
             </button>
           )}
-          {(!interactive || checked) && (
+          {(isTeach || checked) && (
             <button type="button" className="cta cta--primary" onClick={goNext}>
               {isLast ? 'Finish lesson' : 'Continue'}
             </button>
@@ -142,72 +201,59 @@ export function LessonRunner({ level, lessonId, onBack }: Props) {
   )
 }
 
-function StepBody({
-  step,
+function TeachBody({ step }: { step: Extract<LessonStep, { type: 'teach' }> }) {
+  return (
+    <div className="lesson-step">
+      {step.title && <h2 className="lesson-step-title">{step.title}</h2>}
+      <div className="lesson-body">
+        {step.body.map((paragraph) => (
+          <p key={paragraph}>
+            <GlossaryText text={paragraph} />
+          </p>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function ChoiceBody({
+  prompt,
+  choices,
   selectedId,
   checked,
+  correctId,
   onSelect,
+  focusTile,
 }: {
-  step: LessonStep
+  prompt: string
+  choices: readonly { id: string; label: string }[]
   selectedId: string | null
   checked: boolean
+  correctId: string
   onSelect: (id: string) => void
+  focusTile?: LessonFace
 }) {
-  if (step.type === 'teach') {
-    return (
-      <div className="lesson-step">
-        {step.title && <h2 className="lesson-step-title">{step.title}</h2>}
-        <div className="lesson-body">
-          {step.body.map((paragraph) => (
-            <p key={paragraph}>
-              <GlossaryText text={paragraph} />
-            </p>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="lesson-step">
       <h2 className="lesson-step-title">
-        <GlossaryText text={step.prompt} />
+        <GlossaryText text={prompt} />
       </h2>
-
-      {step.type === 'scenario' && (
-        <p className="lesson-situation">
-          <GlossaryText text={step.situation} />
-        </p>
-      )}
-
-      {step.type === 'identify' && (
+      {focusTile && (
         <div
           className="lesson-tile-focus"
-          aria-label={describeLessonFace(step.tile)}
+          aria-label={describeLessonFace(focusTile)}
         >
-          <TileView tile={lessonFaceAsTile(step.tile)} />
+          <TileView tile={lessonFaceAsTile(focusTile)} />
           <span className="lesson-tile-caption">
-            Marker + label — do not rely on color alone
+            Marker + label: do not rely on color alone
           </span>
         </div>
       )}
-
-      {step.type === 'scenario' && step.tiles && step.tiles.length > 0 && (
-        <div className="lesson-tile-row" aria-label="Example tiles">
-          {step.tiles.map((face, i) => (
-            <TileView
-              key={`${i}-${describeLessonFace(face)}`}
-              tile={lessonFaceAsTile(face, `t${i}`)}
-            />
-          ))}
-        </div>
-      )}
-
       <div className="lesson-choices" role="group" aria-label="Choices">
-        {step.choices.map((choice) => {
+        {choices.map((choice) => {
           const selected = selectedId === choice.id
           const showVerdict = checked && selected
-          const correct = choice.id === step.correctId
+          const correct = choice.id === correctId
           return (
             <button
               key={choice.id}
@@ -229,6 +275,114 @@ function StepBody({
             </button>
           )
         })}
+      </div>
+    </div>
+  )
+}
+
+function PlayBody({
+  step,
+  selectedId,
+  checked,
+  onMove,
+}: {
+  step: PlayStep
+  selectedId: string | null
+  checked: boolean
+  onMove: (moveId: string) => void
+}) {
+  return (
+    <div className="lesson-step">
+      <h2 className="lesson-step-title">
+        <GlossaryText text={step.prompt} />
+      </h2>
+      <p className="lesson-situation">
+        <GlossaryText text={step.situation} />
+      </p>
+      {step.goal && (
+        <p className="lesson-goal">
+          Goal: <GlossaryText text={step.goal} />
+        </p>
+      )}
+
+      <div className="play-table" aria-label="Practice table">
+        {step.mode === 'call_or_pass' && step.offer && (
+          <div className="play-offer">
+            <span className="play-offer-label">Discarded</span>
+            <TileView tile={lessonFaceAsTile(step.offer, 'offer')} />
+          </div>
+        )}
+
+        <div className="play-rack-block">
+          <p className="play-rack-label">Your hand</p>
+          <div className="play-rack" role="group" aria-label="Your hand">
+            {step.hand.map((face, index) => {
+              const key = faceKey(face)
+              const selected = selectedId === key
+              const isRight = checked && step.correctIds.includes(key)
+              const isWrong = checked && selected && !isRight
+              return (
+                <span
+                  key={`${key}-${index}`}
+                  className={[
+                    'play-tile-wrap',
+                    selected ? 'is-selected' : '',
+                    isRight ? 'is-correct' : '',
+                    isWrong ? 'is-wrong' : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                >
+                  <TileView
+                    tile={lessonFaceAsTile(face, `hand-${index}`)}
+                    selected={selected}
+                    disabled={checked || step.mode === 'call_or_pass'}
+                    onSelect={
+                      step.mode === 'discard' && !checked
+                        ? () => onMove(key)
+                        : undefined
+                    }
+                  />
+                </span>
+              )
+            })}
+          </div>
+          {step.mode === 'discard' && !checked && (
+            <p className="play-hint">Tap the tile you would discard.</p>
+          )}
+        </div>
+
+        {step.mode === 'call_or_pass' && (
+          <div className="play-actions">
+            {(['call', 'pass'] as const).map((action) => {
+              const selected = selectedId === action
+              const isRight = checked && step.correctIds.includes(action)
+              const isWrong = checked && selected && !isRight
+              return (
+                <button
+                  key={action}
+                  type="button"
+                  className={[
+                    'cta',
+                    action === 'call' ? 'cta--primary' : 'cta--secondary',
+                    selected ? 'is-selected' : '',
+                    isRight ? 'play-action-correct' : '',
+                    isWrong ? 'play-action-wrong' : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                  disabled={checked}
+                  onClick={() => onMove(action)}
+                >
+                  {action === 'call' ? 'Call' : 'Pass'}
+                </button>
+              )
+            })}
+            {!checked && (
+              <p className="play-hint">Choose Call or Pass for this discard.</p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
