@@ -17,10 +17,12 @@ import {
 } from '../../app/patterns'
 import { useLevelConfig } from '../../app/useLevelConfig'
 import { DiscardPile } from '../components/DiscardPile'
+import { MahjongMark } from '../components/MahjongMark'
 import { Rack } from '../components/Rack'
 import { TileView } from '../components/Tile'
 import { WinningHandsGuide } from '../components/WinningHandsGuide'
 import './PracticeGame.css'
+import './screen.css'
 
 const HUMAN = 'east' as const
 
@@ -120,26 +122,32 @@ export function PracticeGame({ onBack }: Props) {
         : `Turn: ${present.currentSeat} · Phase: ${present.phase} · Wall: ${present.wall.length}`
 
   return (
-    <div className="practice">
-      <header className="practice-header">
+    <div className="screen">
+      <div className="felt-frame felt-frame--wide practice">
         {onBack && (
-          <button type="button" className="practice-back" onClick={onBack}>
+          <button type="button" className="back-link" onClick={onBack}>
             ← Change difficulty
           </button>
         )}
-        <h1>Play vs AI</h1>
-        <p className="practice-status">{status}</p>
+        <div className="brand-row">
+          <MahjongMark size="sm" />
+          <p className="brand brand--small">Mahjong Helper</p>
+        </div>
+        <h1 className="headline headline--section">Play vs AI</h1>
+        <p className="practice-status" aria-live="polite">
+          {status}
+        </p>
         <p className="practice-meter" aria-live="polite">
           Pattern meter: {away} tile{away === 1 ? '' : 's'} away
           {bestName ? ` · best: ${bestName}` : ''}
         </p>
-        <p className="practice-notice">
+        <p className="lede lede--tight practice-notice">
           Win by matching a practice-card hand (not the official NMJL card).
         </p>
 
         <WinningHandsGuide highlightedName={bestName} />
 
-        <div className="practice-actions">
+        <div className="practice-actions" role="group" aria-label="Game actions">
           <button type="button" onClick={() => newGame()} className="btn">
             New game
           </button>
@@ -179,6 +187,7 @@ export function PracticeGame({ onBack }: Props) {
             Declare win
           </button>
         </div>
+
         {message && (
           <p className="practice-message" role="alert">
             {message}
@@ -195,84 +204,88 @@ export function PracticeGame({ onBack }: Props) {
             <p>{explanation.detail}</p>
           </aside>
         )}
-      </header>
 
-      {inCall && present.lastDiscard && (
-        <section className="call-panel" aria-label="Call or pass">
-          <h2 className="rack-title">Call or pass</h2>
-          <p className="call-panel-copy">
-            {present.lastDiscard.seat} discarded this tile. Call only for a
-            pung/kong (or bigger) in your pattern, or to win.
-          </p>
-          <div className="call-offer">
-            <TileView tile={present.lastDiscard.tile} />
-          </div>
-          <div className="practice-actions">
-            {callActions.map((action) => (
-              <button
-                key={`${action.meld}-${action.tileIds.join(',')}`}
-                type="button"
-                className="btn btn-primary"
-                onClick={() => apply(action)}
-              >
-                Call {action.meld}
+        {inCall && present.lastDiscard && (
+          <section className="call-panel" aria-label="Call or pass">
+            <h2 className="rack-title">Call or pass</h2>
+            <p className="call-panel-copy">
+              {present.lastDiscard.seat} discarded this tile. Call only for a
+              pung/kong (or bigger) in your pattern, or to win.
+            </p>
+            <div className="call-offer">
+              <TileView tile={present.lastDiscard.tile} />
+            </div>
+            <div className="practice-actions">
+              {callActions.map((action) => (
+                <button
+                  key={`${action.meld}-${action.tileIds.join(',')}`}
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => apply(action)}
+                >
+                  Call {action.meld}
+                </button>
+              ))}
+              <button type="button" className="btn" onClick={doPass}>
+                Pass
               </button>
-            ))}
-            <button type="button" className="btn" onClick={doPass}>
-              Pass
-            </button>
-            {canWin && (
-              <button type="button" className="btn btn-primary" onClick={doWin}>
-                Win on discard
-              </button>
-            )}
-          </div>
-        </section>
-      )}
+              {canWin && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={doWin}
+                >
+                  Win on discard
+                </button>
+              )}
+            </div>
+          </section>
+        )}
 
-      <Rack
-        label="Your hand (East)"
-        tiles={present.hands.east}
-        selectedId={selectedId}
-        interactive={canDiscard}
-        onSelect={onSelect}
-      />
+        <Rack
+          label="Your hand (East)"
+          tiles={present.hands.east}
+          selectedId={selectedId}
+          interactive={canDiscard}
+          onSelect={onSelect}
+        />
 
-      <div className="opponent-summary" aria-label="Opponents">
-        {SEATS.filter((s) => s !== HUMAN).map((seat) => (
-          <p key={seat}>
-            {seat}: {present.hands[seat].length} tiles
-            {present.exposed[seat].length > 0
-              ? ` · ${present.exposed[seat].length} exposed`
-              : ''}
-          </p>
-        ))}
-      </div>
+        <div className="opponent-summary" aria-label="Opponents">
+          {SEATS.filter((s) => s !== HUMAN).map((seat) => (
+            <p key={seat}>
+              {seat}: {present.hands[seat].length} tiles
+              {present.exposed[seat].length > 0
+                ? ` · ${present.exposed[seat].length} exposed`
+                : ''}
+            </p>
+          ))}
+        </div>
 
-      {SEATS.some((s) => present.exposed[s].length > 0) && (
-        <section className="exposed-board" aria-label="Exposed melds">
-          <h2 className="rack-title">Exposed melds</h2>
-          {SEATS.map((seat) =>
-            present.exposed[seat].length === 0 ? null : (
-              <div key={seat} className="exposed-row">
-                <span className="discard-seat">{seat}</span>
-                <div className="exposed-melds">
-                  {present.exposed[seat].map((meld, i) => (
-                    <div key={`${seat}-${i}`} className="exposed-meld">
-                      <span className="exposed-kind">{meld.kind}</span>
-                      {meld.tiles.map((tile) => (
-                        <TileView key={tile.id} tile={tile} />
-                      ))}
-                    </div>
-                  ))}
+        {SEATS.some((s) => present.exposed[s].length > 0) && (
+          <section className="exposed-board" aria-label="Exposed melds">
+            <h2 className="rack-title">Exposed melds</h2>
+            {SEATS.map((seat) =>
+              present.exposed[seat].length === 0 ? null : (
+                <div key={seat} className="exposed-row">
+                  <span className="discard-seat">{seat}</span>
+                  <div className="exposed-melds">
+                    {present.exposed[seat].map((meld, i) => (
+                      <div key={`${seat}-${i}`} className="exposed-meld">
+                        <span className="exposed-kind">{meld.kind}</span>
+                        {meld.tiles.map((tile) => (
+                          <TileView key={tile.id} tile={tile} />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ),
-          )}
-        </section>
-      )}
+              ),
+            )}
+          </section>
+        )}
 
-      <DiscardPile discards={present.discards} seats={SEATS} />
+        <DiscardPile discards={present.discards} seats={SEATS} />
+      </div>
     </div>
   )
 }

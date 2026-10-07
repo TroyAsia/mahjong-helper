@@ -9,7 +9,7 @@ type Props = {
 
 export function Home({ onPlayVsAi, onLessons, onCharleston }: Props) {
   return (
-    <div className="screen screen--home">
+    <div className="screen">
       <div className="felt-frame">
         <MahjongMark size="lg" />
         <h1 className="brand">Mahjong Helper</h1>

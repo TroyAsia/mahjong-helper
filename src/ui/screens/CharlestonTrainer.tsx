@@ -128,7 +128,7 @@ export function CharlestonTrainer({ onBack }: Props) {
 
   return (
     <div className="screen">
-      <div className="felt-frame" style={{ width: 'min(48rem, 100%)' }}>
+      <div className="felt-frame felt-frame--wide">
         <button type="button" className="back-link" onClick={onBack}>
           ← Home
         </button>
