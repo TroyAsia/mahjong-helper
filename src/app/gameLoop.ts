@@ -1,21 +1,21 @@
+import { charlestonBotFromState } from '../ai/bots/charlestonBot'
 import { patternBotFromState } from '../ai/bots/patternBot'
 import { randomLegalFromState } from '../ai/bots/randomLegal'
 import type { AiConfig } from '../ai/types'
+import { getLegalActions } from '../engine/legalMoves'
 import { nextRng } from '../engine/tiles'
-import type { Seat } from '../engine/types'
+import { SEATS, type Seat } from '../engine/types'
 import { useGameStore } from './gameStore'
 
 export type GameLoopOptions = {
   readonly humanSeat: Seat
-  /** From LevelConfig.ai: drives bot delay and strength. */
   readonly ai: AiConfig
   readonly onUpdate?: () => void
 }
 
 /**
- * Advances bot seats until it's the human's turn or the game ends.
- * While waiting on the human, polls so play resumes after they act.
- * Returns a cancel function.
+ * Advances bots (including Charleston and call windows) until the human
+ * must act or the game ends.
  */
 export function startGameLoop(opts: GameLoopOptions): () => void {
   let cancelled = false
@@ -32,7 +32,6 @@ export function startGameLoop(opts: GameLoopOptions): () => void {
   const tick = () => {
     if (cancelled) return
     const { present, humanSeat, dispatch } = useGameStore.getState()
-    const seat = present.currentSeat
     const human = opts.humanSeat ?? humanSeat
 
     if (present.phase === 'ended') {
@@ -40,6 +39,35 @@ export function startGameLoop(opts: GameLoopOptions): () => void {
       return
     }
 
+    if (present.phase === 'charleston') {
+      const waitingBots = SEATS.filter(
+        (seat) =>
+          seat !== human && getLegalActions(present, seat).length > 0,
+      )
+      if (waitingBots.length === 0) {
+        opts.onUpdate?.()
+        schedule(Math.max(100, delayMs()))
+        return
+      }
+      const seat = waitingBots[0]!
+      try {
+        const { action, nextSeed } = charlestonBotFromState(
+          present,
+          seat,
+          botSeed,
+          opts.ai,
+        )
+        botSeed = nextSeed
+        dispatch(seat, action, { isBot: true })
+      } catch {
+        // ignore
+      }
+      opts.onUpdate?.()
+      schedule(delayMs())
+      return
+    }
+
+    const seat = present.currentSeat
     if (seat === human) {
       opts.onUpdate?.()
       schedule(Math.max(100, delayMs()))

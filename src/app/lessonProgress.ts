@@ -12,6 +12,7 @@ function keyFor(level: LevelId, lessonId: string): string {
 
 function read(): LessonProgress {
   try {
+    if (typeof localStorage === 'undefined') return { completed: [] }
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return { completed: [] }
     const parsed = JSON.parse(raw) as LessonProgress
@@ -23,6 +24,7 @@ function read(): LessonProgress {
 }
 
 function write(progress: LessonProgress): void {
+  if (typeof localStorage === 'undefined') return
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress))
 }
 

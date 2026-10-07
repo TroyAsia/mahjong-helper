@@ -16,7 +16,7 @@ type GameStore = {
   readonly past: readonly HistoryEntry[]
   readonly future: readonly HistoryEntry[]
   readonly humanSeat: Seat
-  newGame: (seed?: number) => void
+  newGame: (seed?: number, opts?: { charleston?: boolean }) => void
   dispatch: (
     seat: Seat,
     action: Action,
@@ -38,9 +38,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
   future: [],
   humanSeat: 'east',
 
-  newGame: (seed = Date.now() % 1_000_000) => {
+  newGame: (seed = Date.now() % 1_000_000, opts) => {
     set({
-      present: createInitialState(seed, enginePatterns()),
+      present: createInitialState(seed, enginePatterns(), {
+        charleston: opts?.charleston ?? false,
+      }),
       past: [],
       future: [],
     })

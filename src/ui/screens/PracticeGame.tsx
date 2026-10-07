@@ -5,13 +5,21 @@ import {
   type Explanation,
   type Hint,
 } from '../../app/coachApi'
-import { SEATS, type Tile } from '../../app/display'
+import { SEATS, type Action, type Tile } from '../../app/display'
 import { startGameLoop } from '../../app/gameLoop'
 import { useGameStore } from '../../app/gameStore'
-import { handBestPattern, handIsWinning, handTilesAway } from '../../app/patterns'
+import { legalActionsFor } from '../../app/legal'
+import { illegalMoveMessage } from '../../app/messages'
+import {
+  seatAway,
+  seatPatternName,
+  seatWinning,
+} from '../../app/patterns'
 import { useLevelConfig } from '../../app/useLevelConfig'
 import { DiscardPile } from '../components/DiscardPile'
 import { Rack } from '../components/Rack'
+import { TileView } from '../components/Tile'
+import { WinningHandsGuide } from '../components/WinningHandsGuide'
 import './PracticeGame.css'
 
 const HUMAN = 'east' as const
@@ -30,6 +38,7 @@ export function PracticeGame({ onBack }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [hint, setHint] = useState<Hint | null>(null)
   const [explanation, setExplanation] = useState<Explanation | null>(null)
+  const [message, setMessage] = useState<string | null>(null)
   const [, setTick] = useState(0)
 
   const { thinkDelayMs, strength, mistakeRate } = levelConfig.ai
@@ -47,9 +56,28 @@ export function PracticeGame({ onBack }: Props) {
     present.phase !== 'ended' && present.currentSeat === HUMAN
   const canDraw = isHumanTurn && present.phase === 'draw'
   const canDiscard = isHumanTurn && present.phase === 'discard'
-  const canWin = canDiscard && handIsWinning(present.hands.east)
-  const away = handTilesAway(present.hands.east)
-  const bestName = handBestPattern(present.hands.east)
+  const inCall = present.phase === 'call' && present.currentSeat === HUMAN
+  const canWin = (canDiscard || inCall) && seatWinning(present, HUMAN)
+  const away = seatAway(present, HUMAN)
+  const bestName = seatPatternName(present, HUMAN)
+  const callActions = inCall
+    ? legalActionsFor(present, HUMAN).filter(
+        (a): a is Extract<Action, { type: 'call' }> => a.type === 'call',
+      )
+    : []
+
+  const apply = (action: Action) => {
+    const before = present
+    const result = dispatch(HUMAN, action, { isBot: false })
+    if (!result.ok) {
+      setMessage(illegalMoveMessage(result.reason))
+      return
+    }
+    setMessage(null)
+    setExplanation(
+      explainMove(before, action, result.state, levelConfig.explainer),
+    )
+  }
 
   const onSelect = (tile: Tile) => {
     if (!canDiscard) return
@@ -58,26 +86,24 @@ export function PracticeGame({ onBack }: Props) {
 
   const confirmDiscard = () => {
     if (!selectedId || !canDiscard) return
-    const before = present
-    const action = { type: 'discard' as const, tileId: selectedId }
-    const result = dispatch(HUMAN, action, { isBot: false })
+    apply({ type: 'discard', tileId: selectedId })
     setSelectedId(null)
-    if (result.ok) {
-      setExplanation(
-        explainMove(before, action, result.state, levelConfig.explainer),
-      )
-    }
   }
 
   const doDraw = () => {
     if (!canDraw) return
-    dispatch(HUMAN, { type: 'draw' }, { isBot: false })
+    apply({ type: 'draw' })
     setHint(null)
   }
 
   const doWin = () => {
     if (!canWin) return
-    dispatch(HUMAN, { type: 'declare_win' }, { isBot: false })
+    apply({ type: 'declare_win' })
+  }
+
+  const doPass = () => {
+    if (!inCall) return
+    apply({ type: 'pass' })
   }
 
   const showHint = () => {
@@ -89,7 +115,9 @@ export function PracticeGame({ onBack }: Props) {
       ? present.endReason === 'win'
         ? `Mahjong! Winner: ${present.winner}`
         : `Game over: draw (empty wall)`
-      : `Turn: ${present.currentSeat} · Phase: ${present.phase} · Wall: ${present.wall.length}`
+      : present.phase === 'call' && present.lastDiscard
+        ? `Call window: ${present.lastDiscard.seat} discarded · asking ${present.currentSeat}`
+        : `Turn: ${present.currentSeat} · Phase: ${present.phase} · Wall: ${present.wall.length}`
 
   return (
     <div className="practice">
@@ -106,8 +134,11 @@ export function PracticeGame({ onBack }: Props) {
           {bestName ? ` · best: ${bestName}` : ''}
         </p>
         <p className="practice-notice">
-          Practice patterns only, not the official NMJL card.
+          Win by matching a practice-card hand (not the official NMJL card).
         </p>
+
+        <WinningHandsGuide highlightedName={bestName} />
+
         <div className="practice-actions">
           <button type="button" onClick={() => newGame()} className="btn">
             New game
@@ -148,6 +179,11 @@ export function PracticeGame({ onBack }: Props) {
             Declare win
           </button>
         </div>
+        {message && (
+          <p className="practice-message" role="alert">
+            {message}
+          </p>
+        )}
         {hint && (
           <p className="practice-hint" role="status">
             Hint: {hint.text}
@@ -161,6 +197,39 @@ export function PracticeGame({ onBack }: Props) {
         )}
       </header>
 
+      {inCall && present.lastDiscard && (
+        <section className="call-panel" aria-label="Call or pass">
+          <h2 className="rack-title">Call or pass</h2>
+          <p className="call-panel-copy">
+            {present.lastDiscard.seat} discarded this tile. Call only for a
+            pung/kong (or bigger) in your pattern, or to win.
+          </p>
+          <div className="call-offer">
+            <TileView tile={present.lastDiscard.tile} />
+          </div>
+          <div className="practice-actions">
+            {callActions.map((action) => (
+              <button
+                key={`${action.meld}-${action.tileIds.join(',')}`}
+                type="button"
+                className="btn btn-primary"
+                onClick={() => apply(action)}
+              >
+                Call {action.meld}
+              </button>
+            ))}
+            <button type="button" className="btn" onClick={doPass}>
+              Pass
+            </button>
+            {canWin && (
+              <button type="button" className="btn btn-primary" onClick={doWin}>
+                Win on discard
+              </button>
+            )}
+          </div>
+        </section>
+      )}
+
       <Rack
         label="Your hand (East)"
         tiles={present.hands.east}
@@ -173,9 +242,35 @@ export function PracticeGame({ onBack }: Props) {
         {SEATS.filter((s) => s !== HUMAN).map((seat) => (
           <p key={seat}>
             {seat}: {present.hands[seat].length} tiles
+            {present.exposed[seat].length > 0
+              ? ` · ${present.exposed[seat].length} exposed`
+              : ''}
           </p>
         ))}
       </div>
+
+      {SEATS.some((s) => present.exposed[s].length > 0) && (
+        <section className="exposed-board" aria-label="Exposed melds">
+          <h2 className="rack-title">Exposed melds</h2>
+          {SEATS.map((seat) =>
+            present.exposed[seat].length === 0 ? null : (
+              <div key={seat} className="exposed-row">
+                <span className="discard-seat">{seat}</span>
+                <div className="exposed-melds">
+                  {present.exposed[seat].map((meld, i) => (
+                    <div key={`${seat}-${i}`} className="exposed-meld">
+                      <span className="exposed-kind">{meld.kind}</span>
+                      {meld.tiles.map((tile) => (
+                        <TileView key={tile.id} tile={tile} />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ),
+          )}
+        </section>
+      )}
 
       <DiscardPile discards={present.discards} seats={SEATS} />
     </div>

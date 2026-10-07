@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useGameStore } from './app/gameStore'
 import { useSettingsStore } from './app/settingsStore'
 import type { LevelId } from './levels/schema'
+import { CharlestonTrainer } from './ui/screens/CharlestonTrainer'
 import { Home } from './ui/screens/Home'
 import { LessonList } from './ui/screens/LessonList'
 import { LessonRunner } from './ui/screens/LessonRunner'
@@ -14,6 +15,7 @@ type Screen =
   | { name: 'home' }
   | { name: 'vsAiSelect' }
   | { name: 'practice' }
+  | { name: 'charleston' }
   | { name: 'lessonsSelect' }
   | { name: 'lessonList'; level: LevelId }
   | { name: 'lesson'; level: LevelId; lessonId: string }
@@ -37,6 +39,7 @@ export default function App() {
         <Home
           onPlayVsAi={() => setScreen({ name: 'vsAiSelect' })}
           onLessons={() => setScreen({ name: 'lessonsSelect' })}
+          onCharleston={() => setScreen({ name: 'charleston' })}
         />
       )}
       {screen.name === 'vsAiSelect' && (
@@ -47,6 +50,9 @@ export default function App() {
       )}
       {screen.name === 'practice' && (
         <PracticeGame onBack={() => setScreen({ name: 'vsAiSelect' })} />
+      )}
+      {screen.name === 'charleston' && (
+        <CharlestonTrainer onBack={() => setScreen({ name: 'home' })} />
       )}
       {screen.name === 'lessonsSelect' && (
         <LessonsSelect

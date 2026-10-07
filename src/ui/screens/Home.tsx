@@ -3,9 +3,10 @@ import './screen.css'
 type Props = {
   readonly onPlayVsAi: () => void
   readonly onLessons: () => void
+  readonly onCharleston: () => void
 }
 
-export function Home({ onPlayVsAi, onLessons }: Props) {
+export function Home({ onPlayVsAi, onLessons, onCharleston }: Props) {
   return (
     <div className="screen screen--home">
       <div className="felt-frame">
@@ -21,6 +22,9 @@ export function Home({ onPlayVsAi, onLessons }: Props) {
           </button>
           <button type="button" className="cta cta--secondary" onClick={onLessons}>
             Lessons
+          </button>
+          <button type="button" className="cta cta--secondary" onClick={onCharleston}>
+            Charleston
           </button>
         </div>
       </div>

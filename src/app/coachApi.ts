@@ -1,4 +1,4 @@
-import { explain } from '../coach/explain'
+import { explain, explainCharlestonPass } from '../coach/explain'
 import type { ExplainerConfig } from '../coach/explain'
 import { getHint } from '../coach/hint'
 import type { HintsConfig } from '../coach/hint'
@@ -14,6 +14,15 @@ export function explainMove(
   config: ExplainerConfig,
 ): Explanation {
   return explain(before, action, after, config)
+}
+
+export function explainCharleston(
+  state: GameState,
+  seat: Seat,
+  tileIds: readonly string[],
+  config: ExplainerConfig,
+): Explanation {
+  return explainCharlestonPass(state, seat, tileIds, config)
 }
 
 export function requestHint(

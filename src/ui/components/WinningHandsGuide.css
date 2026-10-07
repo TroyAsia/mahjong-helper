@@ -1,0 +1,114 @@
+.hands-guide {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(196, 168, 98, 0.35);
+  border-radius: 0.3rem;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.hands-guide-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.hands-guide-title {
+  margin: 0;
+  font-family: 'Fraunces', 'Palatino Linotype', Palatino, serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #f0e8d6;
+}
+
+.hands-guide-body {
+  margin-top: 0.75rem;
+}
+
+.hands-guide-intro,
+.hands-guide-notice,
+.hands-guide-legend {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #c8d9d0;
+}
+
+.hands-guide-notice {
+  color: #d7c389;
+  font-size: 0.85rem;
+}
+
+.hands-guide-legend {
+  margin-bottom: 0;
+  color: #9eb3a8;
+  font-size: 0.85rem;
+}
+
+.hands-guide-list {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-height: min(22rem, 50vh);
+  overflow: auto;
+}
+
+.hands-guide-item {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.25rem;
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.hands-guide-item.is-closest {
+  border-color: rgba(226, 197, 107, 0.65);
+  background: rgba(226, 197, 107, 0.1);
+}
+
+.hands-guide-item-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.hands-guide-name {
+  margin: 0;
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #f3ecdc;
+}
+
+.hands-guide-badge {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(226, 197, 107, 0.55);
+  color: #e2c56b;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hands-guide-desc {
+  margin: 0 0 0.45rem;
+  color: #b7c9be;
+  font-size: 0.9rem;
+}
+
+.hands-guide-groups {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: #dce8e1;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.hands-guide-groups li {
+  margin-bottom: 0.15rem;
+}

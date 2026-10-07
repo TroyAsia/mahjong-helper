@@ -146,21 +146,21 @@ Check off a step only when its verification passes. Do one step at a time.
 **Milestone 2: A real game you can win**
 - [x] **6. Patterns and win detection (4h).** `practiceCard.ts` (10-15 original hands, Zod-validated), matcher with joker rules, tiles-away calculator. *Verify:* tests for winning/near-winning hands, jokers rejected in pairs/singles; declare a win in the browser.
 - [x] **7. Level config and level in app state (1.5h).** `schema.ts`, `beginner.json` (plus intermediate/advanced stubs with valid values), `loadLevel()`, `settingsStore.level`, `useLevelConfig()`. Bots read `ai.thinkDelayMs` and `ai.strength`. *Verify:* bad config throws a readable error; changing config visibly changes bot speed; grep shows no `level ===` checks outside `levels/` and `useLevelConfig.ts`.
-- [ ] **8. Pattern bot (4h).** `evaluate.ts`, `patternBot.ts` using `strength` and `mistakeRate`. *Verify:* simulation of 500 games shows pattern bot beats random bot on average tiles-away; strength 0 behaves like random.
+- [x] **8. Pattern bot (4h).** `evaluate.ts`, `patternBot.ts` using `strength` and `mistakeRate`. *Verify:* simulation of 500 games shows pattern bot beats random bot on average tiles-away; strength 0 behaves like random.
 
 **Milestone 3: Coaching**
-- [ ] **9. Pattern meter and hints (3h).** `coach/hint.ts`, meter UI, hint button filtered by `hints.allowed`. *Verify:* hint types not in config are never returned; meter updates after each draw/discard.
-- [ ] **10. Discard explainer (4h).** `explain.ts`, `templates.ts`, explanation panel gated by `explainer.depth`. *Verify:* fixtures for good discard, bad discard (breaks a near-complete pattern), and `depth: off` shows nothing.
+- [x] **9. Pattern meter and hints (3h).** `coach/hint.ts`, meter UI, hint button filtered by `hints.allowed`. *Verify:* hint types not in config are never returned; meter updates after each draw/discard.
+- [x] **10. Discard explainer (4h).** `explain.ts`, `templates.ts`, explanation panel gated by `explainer.depth`. *Verify:* fixtures for good discard, bad discard (breaks a near-complete pattern), and `depth: off` shows nothing.
 
 **Milestone 4: Full American rules**
-- [ ] **11. Calls and jokers (5h).** Call-or-pass prompt, exposed melds, joker swap, no-chow rule, friendly illegal-move messages. *Verify:* jokers can't be called from discards; calls only complete 3+ sets; swap returns the correct tile; illegal call shows a message.
-- [ ] **12. Call/pass explainer (2h).** Templates for call decisions using the pattern meter. *Verify:* fixtures for "good call" and "call that wrecked your hand."
-- [ ] **13. Charleston and trainer (5h).** `charleston.ts` (right, across, left, optional second, courtesy pass), trainer screen, pass explainer. *Verify:* engine tests for pass order and optional-stop rule; trainer gives feedback in the browser.
+- [x] **11. Calls and jokers (5h).** Call-or-pass prompt, exposed melds, joker swap, no-chow rule, friendly illegal-move messages. *Verify:* jokers can't be called from discards; calls only complete 3+ sets; swap returns the correct tile; illegal call shows a message.
+- [x] **12. Call/pass explainer (2h).** Templates for call decisions using the pattern meter. *Verify:* fixtures for "good call" and "call that wrecked your hand."
+- [x] **13. Charleston and trainer (5h).** `charleston.ts` (right, across, left, optional second, courtesy pass), trainer screen, pass explainer. *Verify:* engine tests for pass order and optional-stop rule; trainer gives feedback in the browser.
 
 **Milestone 5: Teaching layer and ship**
 - [x] **14. Lessons and glossary (6h).** Lesson runner, beginner lessons/exercises, tap-for-definition tooltips. *Verify:* complete every lesson in order; every glossary term in lesson text has a working tooltip.
-- [ ] **15. Persistence and polish (3h).** localStorage for progress and settings (including `level`), responsive layout, color-blind-safe suit markers. *Verify:* refresh keeps progress; usable at 375px; Lighthouse accessibility 90+.
-- [ ] **16. Deploy to Vercel (2h).** Confirm `npm run build` (`tsc && vite build`) succeeds. Write `README.md` with install, run, test, build, and deploy instructions (import repo in Vercel, preset Vite, build command `npm run build`, output `dist`). No backend, no env vars, no server code. *Verify:* fresh clone then `npm install && npm run build && npm run preview` works; play a full game and lesson on the live URL.
+- [x] **15. Persistence and polish (3h).** localStorage for progress and settings (including `level`), responsive layout, color-blind-safe suit markers. *Verify:* refresh keeps progress; usable at 375px; Lighthouse accessibility 90+.
+- [x] **16. Deploy to Vercel (2h).** Confirm `npm run build` (`tsc && vite build`) succeeds. Write `README.md` with install, run, test, build, and deploy instructions (import repo in Vercel, preset Vite, build command `npm run build`, output `dist`). No backend, no env vars, no server code. *Verify:* fresh clone then `npm install && npm run build && npm run preview` works; play a full game and lesson on the live URL.
 
 **Do not begin Phase 2 until all Phase 1 steps are checked and the user says to continue.**
 
