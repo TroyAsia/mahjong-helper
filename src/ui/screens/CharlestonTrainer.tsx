@@ -3,6 +3,7 @@ import { explainCharleston, type Explanation } from '../../app/coachApi'
 import { startGameLoop } from '../../app/gameLoop'
 import { useGameStore } from '../../app/gameStore'
 import { useLevelConfig } from '../../app/useLevelConfig'
+import { MahjongMark } from '../components/MahjongMark'
 import { Rack } from '../components/Rack'
 import type { Tile } from '../../app/display'
 import './PracticeGame.css'
@@ -131,7 +132,10 @@ export function CharlestonTrainer({ onBack }: Props) {
         <button type="button" className="back-link" onClick={onBack}>
           ← Home
         </button>
-        <p className="brand brand--small">Mahjong Helper</p>
+        <div className="brand-row">
+          <MahjongMark size="sm" />
+          <p className="brand brand--small">Mahjong Helper</p>
+        </div>
         <h1 className="headline headline--section">Charleston trainer</h1>
         <p className="lede lede--tight">
           Practice the tile-passing phase that happens before play starts.

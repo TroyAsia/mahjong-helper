@@ -1,5 +1,6 @@
 import { lessonTracks } from '../../content/lessons/tracks'
 import type { LevelId } from '../../app/levelTypes'
+import { MahjongMark } from '../components/MahjongMark'
 import './screen.css'
 
 type Props = {
@@ -14,7 +15,10 @@ export function LessonsSelect({ onBack, onSelect }: Props) {
         <button type="button" className="back-link" onClick={onBack}>
           ← Back
         </button>
-        <p className="brand brand--small">Mahjong Helper</p>
+        <div className="brand-row">
+          <MahjongMark size="sm" />
+          <p className="brand brand--small">Mahjong Helper</p>
+        </div>
         <h1 className="headline headline--section">Choose lesson level</h1>
         <p className="lede lede--tight">
           Start with the basics, then grow into strategy and table reading.

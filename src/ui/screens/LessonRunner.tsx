@@ -9,6 +9,7 @@ import {
 } from '../../app/lessonDisplay'
 import type { LevelId } from '../../app/levelTypes'
 import { getLesson, getLessonTrack } from '../../content/lessons/tracks'
+import { MahjongMark } from '../components/MahjongMark'
 import {
   faceKey,
   isPlayCorrect,
@@ -104,7 +105,10 @@ export function LessonRunner({ level, lessonId, onBack }: Props) {
         <button type="button" className="back-link" onClick={onBack}>
           ← {track.label} lessons
         </button>
-        <p className="brand brand--small">Mahjong Helper</p>
+        <div className="brand-row">
+          <MahjongMark size="sm" />
+          <p className="brand brand--small">Mahjong Helper</p>
+        </div>
         <h1 className="headline headline--section">{lesson.title}</h1>
         <p className="lesson-meta">
           {progressLabel}

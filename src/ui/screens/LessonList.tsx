@@ -4,6 +4,7 @@ import {
 } from '../../app/lessonProgress'
 import type { LevelId } from '../../app/levelTypes'
 import { getLessonTrack } from '../../content/lessons/tracks'
+import { MahjongMark } from '../components/MahjongMark'
 import './screen.css'
 
 type Props = {
@@ -25,7 +26,10 @@ export function LessonList({ level, onBack, onOpenLesson }: Props) {
         <button type="button" className="back-link" onClick={onBack}>
           ← Back
         </button>
-        <p className="brand brand--small">Mahjong Helper</p>
+        <div className="brand-row">
+          <MahjongMark size="sm" />
+          <p className="brand brand--small">Mahjong Helper</p>
+        </div>
         <h1 className="headline headline--section">{track.label} lessons</h1>
         <p className="lede lede--tight">{track.blurb}</p>
         <p className="lesson-track-progress">

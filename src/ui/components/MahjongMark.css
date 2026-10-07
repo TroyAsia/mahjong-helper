@@ -1,0 +1,29 @@
+.mahjong-mark {
+  display: block;
+  flex-shrink: 0;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
+}
+
+.mahjong-mark--lg {
+  width: clamp(3.25rem, 10vw, 4.5rem);
+  height: auto;
+  margin: 0 0 1rem;
+}
+
+.mahjong-mark--sm {
+  width: 1.55rem;
+  height: auto;
+  margin: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.35rem;
+}
+
+.brand-row .brand--small {
+  margin-bottom: 0;
+}

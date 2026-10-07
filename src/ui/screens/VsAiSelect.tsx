@@ -1,4 +1,5 @@
 import type { LevelId } from '../../app/levelTypes'
+import { MahjongMark } from '../components/MahjongMark'
 import './screen.css'
 
 type Props = {
@@ -35,7 +36,10 @@ export function VsAiSelect({ onBack, onSelect }: Props) {
         <button type="button" className="back-link" onClick={onBack}>
           ← Back
         </button>
-        <p className="brand brand--small">Mahjong Helper</p>
+        <div className="brand-row">
+          <MahjongMark size="sm" />
+          <p className="brand brand--small">Mahjong Helper</p>
+        </div>
         <h1 className="headline headline--section">Choose AI difficulty</h1>
         <p className="lede lede--tight">
           Pick how tough you want your three opponents to be.
