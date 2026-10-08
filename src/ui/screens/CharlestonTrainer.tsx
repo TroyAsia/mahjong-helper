@@ -89,12 +89,12 @@ export function CharlestonTrainer({ onBack }: Props) {
     if (charleston.step !== 'courtesy' && selected.length !== 3) return
     if (charleston.step === 'courtesy' && selected.length > 3) return
     const tileIds = selected.slice(0, count)
-    const feedback = explainCharleston(
-      present,
-      HUMAN,
-      tileIds,
-      levelConfig.explainer,
-    )
+    // The trainer exists to judge the pass. Beginner play keeps Charleston
+    // explanations off, so this screen always asks for a full verdict.
+    const feedback = explainCharleston(present, HUMAN, tileIds, {
+      depth: 'detailed',
+      decisionTypes: ['charleston'],
+    })
     const result = dispatch(
       HUMAN,
       { type: 'charleston_pass', tileIds },
@@ -217,6 +217,15 @@ export function CharlestonTrainer({ onBack }: Props) {
               {stepLabel(charleston!.step)}
               {submitted ? ' · Waiting for others…' : ''}
             </p>
+            {explanation && explanation.kind !== 'none' && (
+              <aside
+                className={`practice-explain is-${explanation.verdict}`}
+                aria-live="polite"
+              >
+                <strong>{explanation.summary}</strong>
+                <p>{explanation.detail}</p>
+              </aside>
+            )}
             <Rack
               label="Your hand (East): tap tiles to pass"
               tiles={present.hands.east}
@@ -269,8 +278,11 @@ export function CharlestonTrainer({ onBack }: Props) {
           </>
         )}
 
-        {explanation && explanation.kind !== 'none' && (
-          <aside className="practice-explain" aria-live="polite">
+        {done && explanation && explanation.kind !== 'none' && (
+          <aside
+            className={`practice-explain is-${explanation.verdict}`}
+            aria-live="polite"
+          >
             <strong>{explanation.summary}</strong>
             <p>{explanation.detail}</p>
           </aside>

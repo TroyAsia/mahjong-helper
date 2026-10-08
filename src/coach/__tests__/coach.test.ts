@@ -223,6 +223,17 @@ describe('explainCharlestonPass', () => {
     expect(e.verdict).toBe('good')
   })
 
+  it('calls a one-tile setback a reasonable pass', () => {
+    const e = explainCharlestonPass(
+      state,
+      'east',
+      ['wind-east#0', junk[0]!, junk[1]!],
+      detailed,
+    )
+    expect(e.verdict).toBe('ok')
+    expect(e.summary).toBe('Reasonable pass')
+  })
+
   it('flags passing tiles that belong to the closest pattern', () => {
     const e = explainCharlestonPass(
       state,

@@ -99,6 +99,18 @@
   font-family: 'Source Serif 4', Georgia, serif;
 }
 
+.practice-explain.is-good {
+  border-left-color: #7dcea0;
+}
+
+.practice-explain.is-ok {
+  border-left-color: #e2c56b;
+}
+
+.practice-explain.is-bad {
+  border-left-color: #f0b4a8;
+}
+
 .practice-explain p {
   margin: 0.25rem 0 0;
   color: #c8d9d0;

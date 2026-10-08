@@ -108,7 +108,7 @@ export function charlestonOk(patternName: string): Explanation {
   return {
     kind: 'charleston',
     verdict: 'ok',
-    summary: 'Acceptable pass',
+    summary: 'Reasonable pass',
     detail: `One of those tiles was useful for ${patternName}. Try keeping tiles that fit your closest pattern.`,
   }
 }
